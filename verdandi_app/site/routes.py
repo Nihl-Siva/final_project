@@ -2,8 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from ..forms import WatchlistForm
 from ..models import Watchlist, db
-# from ..helpers import wiki_how_generator
-
 
 
 site = Blueprint('site', __name__, template_folder='site_templates')
@@ -18,13 +16,11 @@ def profile():
     my_watchlist = WatchlistForm()
     try:
         if request.method == "POST" and my_watchlist.validate_on_submit():
-            make = my_watchlist.make.data.title().strip()
-            model = my_watchlist.model.data.title().strip()
-            year = my_watchlist.year.data
-            color = my_watchlist.color.data.title().strip()
+            title = my_watchlist.title.data.title().strip()
+            rated = my_watchlist.rated.data.title().strip()
             user_token = current_user.token
 
-            watchlist = Watchlist(make, model, year, color, user_token)
+            watchlist = Watchlist(title, rated, user_token)
 
             db.session.add(watchlist)
             db.session.commit()
