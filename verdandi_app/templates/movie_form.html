@@ -1,0 +1,16 @@
+<form method = "POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <fieldset id="movie-field">
+        {{ form.title.label }}
+        {{ form.title(class = "form-control", placeholder = "Add Movie Title") }}
+        </fieldset>
+        <fieldset id="movie-field">
+        {{ form.year.label }}
+        {{ form.year(class = "form-control", placeholder = "Specify Year (Optional)") }}
+        </fieldset>
+       
+        {{ form.submit_movie(class = "btn btn-primary btn-block") }}
+
+    </div>
+</form>

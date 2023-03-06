@@ -13,12 +13,16 @@
         {{ form.last_name.label }}
         {{ form.last_name(class = "form-control", placeholder = "Last Name") }}
         </fieldset>
-        <fieldset id="pass-field">
+        <fieldset id="username-field">
+        {{ form.username.label }}
+        {{ form.username(class = "form-control", placeholder = "Username") }}
+        </fieldset>
+        <fieldset id="password-field">
         {{ form.password.label }}
         {{ form.password(class = "form-control", placeholder = "Password") }}
         </fieldset>
 
-        {{ form.submit_button(class = "btn btn-primary btn-block") }}
+        {{ form.submit_user(class = "btn btn-primary btn-block") }}
 
     </div>
 

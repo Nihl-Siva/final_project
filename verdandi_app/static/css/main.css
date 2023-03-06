@@ -1,16 +1,22 @@
 /* Nav Styles */
 .ct-nav {
+    background-color: black;
+    color: white;
     display: flex;
     justify-content: space-between;
 }
 
 .ct-nav img {
+    background-color: black;
+    color: white;
     width: 25%;
     max-width: 100%;
     margin-left: 2vw;
 }
 
 ul#horizontal-list {
+    background-color: black;
+    color: white;
     min-width: 696px;
     list-style: none;
     padding-top: 20px;
@@ -18,13 +24,16 @@ ul#horizontal-list {
 
 ul#horizontal-list li,
 ul#horizontal-list a {
+    background-color: black;
+    color: white;
     display: inline;
     text-decoration: none;
     padding: 0.5vw;
-    color: black;
 }
 
 ul#horizontal-list a:nth-last-child(1) {
+    background-color: black;
+    color: white;
     border: 2px solid blue;
     border-radius: 11px;
     margin-right: 0.2vw;
@@ -32,10 +41,14 @@ ul#horizontal-list a:nth-last-child(1) {
 /* End of navbar styles */
 /* Header section of index.html */
 #header-text{
+    background-color: black;
+    color: white;
     padding: 2vw;
 }
 
 .header-image{
+    background-color: black;
+    color: white;
     width: 82%;
     max-width: 100%;
 }
@@ -43,26 +56,36 @@ ul#horizontal-list a:nth-last-child(1) {
 
 /* Middle Section Styles */
 #middle-text{
+    background-color: black;
+    color: white;
     text-align:center;
     padding: 13vh;
 }
 
 #middle-text h2{
+    background-color: black;
+    color: white;
     padding: 1.5vw;
 }
 /* End of middle section */
 
 /* Collection of Features */
 #api-image, #graphql-image, #database-image{
+    background-color: black;
+    color: white;
     margin-bottom: 10vh;
 }
 
 #features-section{
+    background-color: black;
+    color: white;
     margin: 8vw;
 }
 /* End of Features Section */
 /* Start of Community Section */
-#Watchlist-image{
+#Movie-image{
+    background-color: black;
+    color: white;
     width: 50%;
     max-width: 75%;
     margin-left: 3vw;
@@ -70,33 +93,38 @@ ul#horizontal-list a:nth-last-child(1) {
 /* end of Community Section */
 /* Start of Footer */
 .footer-text-flex{
+    background-color: black;
+    color: white;
     display: flex;
     flex-direction: column;
     margin-top: 3vw;
 }
 
 #footer-logo{
+    background-color: black;
+    color: white;
     width: 100%;
     max-width: 100%;
 }
 
 #footer {
-    border-top: 3px solid black;
+    background-color: black;
+    color: white;
+    border-top: 3px solid white;
     margin-top: 20vh;
 }
 
 /* Profile Styles */
 .hero-section {
+    background-color: black;
+    color: white;
     height: 95vh;
-    background-image: linear-gradient(to right bottom, rgba(30, 115, 172, 0.7), rgba(142, 57, 153, 0.6)), url(../images/car-pic.png);
-    background-size: cover;
-    background-position: 35% 50%;
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 80vh, 0 100%);
-    clip-path: polygon(0 0, 100% 0, 100% 80vh, 0 100%);
     position: relative;
 }
 
 .header-text {
+    background-color: black;
+    color: white;
     display: flex;
     justify-content: center;
     padding-top: 2%;
@@ -105,8 +133,18 @@ ul#horizontal-list a:nth-last-child(1) {
     color: white;
 }
 
-.watchlist_form {
-    padding-top: 2%;
+.movie_form {
+    background-color: black;
     color: white;
+    padding-top: 2%;
     
 }
+
+html, div, .container, #footer {
+    width: 100%;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+

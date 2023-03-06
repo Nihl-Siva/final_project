@@ -17,43 +17,41 @@
 {% endwith %}
 
 <header class="hero-section">
-    <h3 class="header-text">If you aint first, yer last {{current_user.email}}!</h3>
-    <h1>Login Here</h1>
-    <main class="container watchlist_form">
+    <h3 class="header-text">Hey {{current_user.email}}!</h3>
+    <main class="container movie_form">
     <div class="row">
         <aside class="col-12 col-md-6">
-            <h2>Create a Watchlist!</h2>
-            {% include 'watchlist_form.html' %}
+            <h2>Create a Movie!</h2>
+            {% include 'movie_form.html' %}
         </aside>
     </div>
+    
+    
 </main>
 
-</header>
+
 
 <div class="container">
-    <h3>Profile Details:</h3>
-    <li class="list-group-item">Email: {{ current_user.email }}</li>
-    <li class="list-group-item">Token: {{ current_user.token }}</li>
+    <h3>Watchlist:</h3>
     <div class="row">
-        {% for watchlist in watchlists %}
+        {% for movie in movies %}
         <div class="col-3">
-            <div class="watchlistd" style="width: 18rem;">
-            <img src="../../static/images/watchlist-pic.png" alt="Watchlistd Image Cap" class="watchlistd-img-top">
-            <div class="watchlistd-body">
-                <h5 class="watchlistd-title">Your {{ watchlist.model }}</h5>
-                <p class="watchlistd-text">
-                    Title: {{ watchlist.title }}<br>
-                    Rated: {{ watchlist.rated }}
-                </p>
-            </div>
+            <div class="card">
+            <img class="card-img-top" src="{{ movie.poster_url }}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }}</h5>
+                <p class="card-text">#{{ movie.year }}</p>
+                <p>Rated: {{ movie.rated }}</p>
+            </div>     
             </div>
         </div>
         {% endfor %}
-
-
-
-
+        
+        
+        
+        
     </div>
 </div>
 
+</header>
 {% endblock content %}
