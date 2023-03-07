@@ -4,9 +4,9 @@ from wtforms.validators import DataRequired, Email
 
 class SignupForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
+    username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
-    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit_user = SubmitField('Sign Up')
 
@@ -16,7 +16,7 @@ class SigninForm(FlaskForm):
     submit_user = SubmitField('Sign In')
 
 class FriendlistForm(FlaskForm):
-    friend_username = StringField('Friend Username', validators=[DataRequired()])
+    friend_username = StringField("Friend's Username")
     submit_friend = SubmitField('Add Friend')
 
 class MovieForm(FlaskForm):
@@ -40,7 +40,3 @@ class MovieForm(FlaskForm):
     dvd_release = StringField('dvd_release')
     box_office = StringField('Box Office')
     submit_movie = SubmitField('Add Movie')
-
-class WatchlistForm(FlaskForm):
-    movie_id = StringField('Movie Title', validators=[DataRequired()])
-    submit_watchlist = SubmitField('Add To Watchlist')

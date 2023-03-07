@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+   <h3>Movies in common:</h3>
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-3">
+                <div class="card">
+                    <img class="card-img-top" src="{{ movie.poster_url }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text">{{ movie.year }}</p>
+                        <p>Year: {{ movie.year }}</p>
+                        <p>Rated: {{ movie.rated }}</p>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    
+{% endblock content %}

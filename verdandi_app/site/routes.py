@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from ..forms import MovieForm
-from ..models import  Movie, db
-from ..helpers import get_movie_info
+from ..forms import MovieForm, FriendlistForm
+from ..models import  Movie, Friendlist, User, db
+from ..helpers import get_movie_info, get_common_movies
 import requests
 
 
@@ -13,86 +13,17 @@ def home():
     return render_template('index.html')
 
 
-# @site.route('/profile', methods = ['GET', 'POST'])
-# @login_required
-# def profile():
-#     my_movie = MovieForm()
-#     try:
-#         if request.method == "POST" and my_movie.validate_on_submit():
-#             title = my_movie.title.data
-#             year = my_movie.year.data
-#             rated = my_movie.rated.data
-#             release_date = my_movie.release_date.data
-#             runtime = my_movie.runtime.data
-#             genre = my_movie.genre.data
-#             director = my_movie.director.data
-#             writer = my_movie.writer.data
-#             actors = my_movie.actors.data
-#             plot = my_movie.plot.data
-#             language = my_movie.language.data
-#             country = my_movie.country.data
-#             awards = my_movie.awards.data
-#             poster_url = my_movie.poster_url.data
-#             metascore = my_movie.metascore.data
-#             imdb_rating = my_movie.imdb_rating.data
-#             media_type = my_movie.media_type.data
-#             dvd_release = my_movie.dvd_release.data
-#             box_office = my_movie.box_office.data
-#             movie_info = get_movie_info(title)
-#             title = movie_info.get('title', '')
-#             year = movie_info.get('year', '')
-#             rated = movie_info.get('rated', '')
-#             release_date = movie_info.get('release_date', '')
-#             runtime = movie_info.get('runtime', '')
-#             genre = movie_info.get('genre', '')
-#             director = movie_info.get('director', '')
-#             writer = movie_info.get('writer', '')
-#             actors = movie_info.get('actors', '')
-#             plot = movie_info.get('plot', '')
-#             language = movie_info.get('language', '')
-#             country = movie_info.get('country', '')
-#             awards = movie_info.get('awards', '')
-#             poster_url = movie_info.get('poster_url', '')
-#             metascore = movie_info.get('metascore', '')
-#             imdb_rating = movie_info.get('imdb_rating', '')
-#             media_type = movie_info.get('media_type', '')
-#             dvd_release = movie_info.get('dvd_release', '')
-#             box_office = movie_info.get('box_office', '')
-
-
-#             user_token = current_user.user_token
-
-
-#             movie = Movie(title, year, rated, release_date, runtime, genre, director, writer, actors, plot, language, country, awards, poster_url, metascore, imdb_rating, media_type, dvd_release, box_office, user_token)
-#             print(movie)
-#             db.session.add(movie)
-#             db.session.commit()
-
-#             return redirect(url_for('site.profile'))
-
-#     except:
-#         raise Exception("We aint takin that movie! Try again pal!")
-
-#     user_token = current_user.user_token
-#     movies = Movie.query.filter_by(user_token=user_token)
-
-#     return render_template('profile.html', form=my_movie, movies=movies)
-
-
-
 @site.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     my_movie = MovieForm()
+    my_friend = FriendlistForm()
     try:
         if request.method == 'POST' and my_movie.validate_on_submit():
-
             title = my_movie.title.data
             year = my_movie.year.data
-
-           
-            # Create and add movie to database
             user_token = current_user.user_token
+
             movie_info = get_movie_info(title, year)
 
             movie = Movie(
@@ -116,64 +47,68 @@ def profile():
                 dvd_release = movie_info['DVD'],
                 box_office = movie_info['BoxOffice'],
                 user_token = current_user.user_token
-
             )
 
             db.session.add(movie)
             db.session.commit()
 
+            flash(f"{title.title()} was added to your watchlist.", "add-movie-successful")
+            return redirect(url_for('site.profile'))
+
+        
+        elif request.method == 'POST' and my_friend.validate_on_submit():
+            friend_username = my_friend.friend_username.data
+            friend = User.query.filter_by(username=friend_username).first()
+            if friend and friend.username != current_user.username:
+                existing_friendship = Friendlist.query.filter_by(username=current_user.username, friend_username=friend_username).first()
+                if existing_friendship:
+                    flash(f"{friend_username} is already your friend.", "add-friend-failed")
+                else:
+                    username = current_user.username
+                    friend_username = friend.username
+                    user_token = current_user.user_token
+                    friend_token = friend.user_token
+
+                    friendlist = Friendlist(username=username, friend_username=friend_username, user_token=user_token, friend_token=friend_token)
+
+                    db.session.add(friendlist)
+                    db.session.commit()
+
+                    flash(f"{friend_username.title()} was added to your friends list.", "add-friend-successful")
+                    return redirect(url_for('site.profile'))
+            else:
+                if friend and friend.username == current_user.username:
+                    flash("You can't add yourself as a friend! Sorry!", "add-self-failed")
+                else:
+                    flash("Failed to find friend in database. Please try again.", "add-friend-failed")
             return redirect(url_for('site.profile'))
 
     except:
-        raise Exception("We ain't taking that movie! Try again pal!")
+        flash("We ain't got that movie! Try again pal!", "add-movie-failed")
+        return redirect(url_for('site.profile'))
 
     user_token = current_user.user_token
     movies = Movie.query.filter_by(user_token=user_token)
+    friends = Friendlist.query.filter_by(user_token=user_token)
 
-    return render_template('profile.html', form=my_movie, movies=movies)
-
-
-# def add_movie(title):
-#     # Make API call to retrieve movie data
-#     movie_data = get_movie_info(title)
-#     my_movie = MovieForm()
-
-#     try:
-#         if movie_data and my_movie.validate_on_submit():
-#             # Create a new Movie object and set its attributes
-#             title = my_movie.title.data
-#             movie = Movie()
-#             movie.title = movie_data['Title']
-#             movie.year = movie_data['Year']
-#             movie.rated = movie_data['Rated']
-#             movie.release_date = movie_data['Released']
-#             movie.runtime = movie_data['Runtime']
-#             movie.genre = movie_data['Genre']
-#             movie.director = movie_data['Director']
-#             movie.writer = movie_data['Writer']
-#             movie.actors = movie_data['Actors']
-#             movie.plot = movie_data['Plot']
-#             movie.language = movie_data['Language']
-#             movie.country = movie_data['Country']
-#             movie.awards = movie_data['Awards']
-#             movie.poster_url = movie_data['Poster']
-#             movie.imdb_rating = movie_data['imdbRating']
-#             movie.media_type = movie_data['Type']
-#             movie.box_office = movie_data['BoxOffice']
-#             # Add the movie object to the session and commit changes to the database
-#             db.session.add(movie)
-#             db.session.commit()
-#             return True
-#         else:
-#             return False
-#         return redirect(url_for('site.profile'))
-
-#     except:
-#         raise Exception("We aint takin that movie! Try again pal!")
-
-#     user_token = current_user.user_token
-#     movies = Movie.query.filter_by(user_token=user_token)
-
-#     return render_template('profile.html', form=my_movie, movies=movies)
+    return render_template('profile.html', my_movie=my_movie, my_friend=my_friend, movies=movies, friends=friends)
 
 
+# @site.route('/common_movies/<user_token>/<friend_token>')
+# def common_movies(user_token, friend_token):
+#     # Call your function here
+#     movies = get_common_movies(user_token, friend_token)
+#     friends = Friendlist.query.filter_by(user_token=user_token)
+
+   
+#     return render_template('common_movies.html', movies=movies, friends=friends)
+
+@site.route('/common_movies/<user_token>/<friend_token>')
+def common_movies(user_token, friend_token):
+    # Call your function here
+    movies = get_common_movies(user_token, friend_token)
+    print(movies)  # Debugging line
+    
+    friend = User.query.filter_by(user_token=friend_token)
+   
+    return render_template('common_movies.html', movies=movies, friend=friend)

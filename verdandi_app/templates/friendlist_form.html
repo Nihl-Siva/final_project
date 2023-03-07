@@ -1,12 +1,12 @@
 <form method = "POST">
-    {{ form.hidden_tag() }}
+    {{ my_friend.hidden_tag() }}
     <div class="form-group">
         <fieldset id="friend-id-field">
-        {{ form.friend_id.label }}
-        {{ form.friend_id(class = "form-control", placeholder = "Enter A Friend's Username") }}
+        {{ my_friend.friend_username.label }}
+        {{ my_friend.friend_username(class = "form-control", placeholder = "Enter A Friend's Username") }}
         </fieldset>
      
-        {{ form.submit_friend(class = "btn btn-primary btn-block") }}
+        {{ my_friend.submit_friend(class = "btn btn-primary btn-block") }}
 
     </div>
 </form>

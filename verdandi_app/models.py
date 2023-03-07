@@ -21,9 +21,9 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key = True)
     email = db.Column(db.String(150), nullable = False, unique = True)
+    username = db.Column(db.String(150), nullable = False, unique = True)
     first_name = db.Column(db.String(150), nullable = True, default = '')
     last_name = db.Column(db.String(150), nullable = True, default = '')
-    username = db.Column(db.String(150), nullable = False, unique = True)
     password = db.Column(db.String(150), nullable = True, default = '')
     user_token = db.Column(db.String, default = '', unique = True)
     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
@@ -60,13 +60,19 @@ class User(db.Model, UserMixin):
 
 class Friendlist(db.Model):
     id = db.Column(db.String, primary_key = True)
-    friend_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    username = db.Column(db.String, db.ForeignKey('user.username'), nullable = False)
+    friend_username = db.Column(db.String, db.ForeignKey('user.username'), nullable = False)
     user_token = db.Column(db.String, db.ForeignKey('user.user_token'), nullable = False)
+    friend_token = db.Column(db.String, db.ForeignKey('user.user_token'), nullable = False)
 
-    def __init__(self, friend_id, user_token, id =''):
+
+
+    def __init__(self, username, friend_username, user_token, friend_token, id =''):
         self.id = self.set_id()
-        self.friend_id = friend_id
+        self.username = username
+        self.friend_username = friend_username
         self.user_token = user_token
+        self.friend_token = friend_token
 
 
     
@@ -74,11 +80,11 @@ class Friendlist(db.Model):
         return str(uuid.uuid4())
 
     def __repr__(self):
-        return f"<Friendlist(user_token='{self.user_token}', friend_id='{self.friend_id}')>"
+        return f"<Friendlist(user_token='{self.username}', friend_id='{self.friend_username}')>"
 
 class FriendlistSchema(ma.Schema):
     class Meta:
-        model = Friendlist
+        fields = ['friend_id', 'user_token']
 
 friendlist_schema = FriendlistSchema()
 friendlists_schema = FriendlistSchema(many=True)
@@ -152,30 +158,3 @@ class MovieSchema(ma.Schema):
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many=True)
 
-
-# --- Watchlist Model --- #
-
-class Watchlist(db.Model):
-    id = db.Column(db.String, primary_key = True)
-    movie_id = db.Column(db.String, db.ForeignKey('movie.id'), nullable=False)
-    user_token = db.Column(db.String, db.ForeignKey('user.user_token'), nullable = False)
-
-
-    def __init__(self, movie_id, user_token, id =''):
-        self.id = self.set_id()
-        self.movie_id = movie_id
-        self.user_token = user_token
-
-    
-    def set_id(self):
-        return str(uuid.uuid4())
-
-    def __repr__(self):
-        return f"<Watchlist(user_id='{self.user_token}', movie_id='{self.movie_id}')>"
-
-class WatchlistSchema(ma.Schema):
-    class Meta:
-        model = Watchlist
-
-watchlist_schema = WatchlistSchema()
-watchlists_schema = WatchlistSchema(many=True)
